@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abatbook — Guia Clínico</title>
+  <meta name="theme-color" content="#0b1220" />
+  <style>
+    :root{
+      --bg:#070b14;
+      --panel:#0b1220;
+      --panel2:#0f1a33;
+      --card:#0c1530;
+      --text:#e8eefc;
+      --muted:#a9b4d6;
+      --line:rgba(255,255,255,.08);
+      --accent:#4aa3ff;
+      --accent2:#7c5cff;
+      --ok:#35d08a;
+      --warn:#ffcc66;
+      --bad:#ff5c7a;
+      --shadow:0 14px 30px rgba(0,0,0,.35);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(1200px 500px at 20% -10%, rgba(74,163,255,.22), transparent 60%),
+        radial-gradient(900px 480px at 95% 10%, rgba(124,92,255,.18), transparent 55%),
+        radial-gradient(900px 520px at 40% 120%, rgba(53,208,138,.12), transparent 55%),
+        var(--bg);
+      color:var(--text);
+      overflow-x:hidden;
+    }
+    a{color:inherit}
+    .wrap{max-width:1100px; margin:0 auto; padding:18px 14px 84px;}
+    header{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(180deg, rgba(7,11,20,.85), rgba(7,11,20,.45));
+      border-bottom:1px solid var(--line);
+    }
+    .topbar{
+      max-width:1100px; margin:0 auto;
+      padding:14px 14px;
+      display:flex; gap:12px; align-items:center; justify-content:space-between;
+    }
+    .brand{
+      display:flex; gap:10px; align-items:center;
+      min-width:220px;
+    }
+    .logo{
+      width:42px; height:42px; border-radius:14px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 10px 20px rgba(74,163,255,.18);
+      display:grid; place-items:center;
+      position:relative;
+      overflow:hidden;
+    }
+    .logo:before{
+      content:"";
+      position:absolute; inset:-30%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), transparent 45%);
+      transform: rotate(18deg);
+    }
+    .logo span{
+      font-weight:900; letter-spacing:.5px;
+      color:#081024;
+      background: rgba(255,255,255,.85);
+      padding:6px 8px;
+      border-radius:10px;
+      position:relative;
+      font-size:14px;
+    }
+    .brand h1{
+      margin:0; line-height:1.1;
+      font-size:16px;
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+    .brand small{
+      color:var(--muted);
+      display:block;
+      margin-top:2px;
+      font-weight:600;
+      font-size:12px;
+    }
+    .right{
+      display:flex; gap:10px; align-items:center;
+    }
+    .pill{
+      padding:8px 10px;
+      border:1px solid var(--line);
+      background: rgba(11,18,32,.65);
+      border-radius:999px;
+      font-size:12px;
+      color:var(--muted);
+      display:flex; gap:8px; align-items:center;
+    }
+    .dot{
+      width:8px; height:8px; border-radius:50%;
+      background: var(--ok);
+      box-shadow: 0 0 0 6px rgba(53,208,138,.08);
+    }
+    .btn{
+      border:1px solid var(--line);
+      background: rgba(11,18,32,.75);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      transition: transform .06s ease, background .2s ease, border-color .2s ease;
+      display:flex; gap:8px; align-items:center;
+      user-select:none;
+      font-weight:700;
+    }
+    .btn:hover{background: rgba(15,26,51,.85); border-color: rgba(255,255,255,.14)}
+    .btn:active{transform: translateY(1px)}
+    .btn.primary{
+      border-color: rgba(74,163,255,.35);
+      background: linear-gradient(135deg, rgba(74,163,255,.22), rgba(124,92,255,.18));
+    }
+    .searchRow{
+      max-width:1100px; margin:0 auto;
+      padding:0 14px 14px;
+      display:flex; gap:10px; align-items:center;
+    }
+    .search{
+      flex:1;
+      border:1px solid var(--line);
+      background: rgba(11,18,32,.6);
+      border-radius:14px;
+      padding:12px 12px;
+      display:flex; gap:10px; align-items:center;
+      box-shadow: 0 10px 26px rgba(0,0,0,.22);
+    }
+    .search input{
+      flex:1;
+      background:transparent;
+      border:none;
+      outline:none;
+      color:var(--text);
+      font-size:14px;
+      font-weight:650;
+    }
+    .search input::placeholder{color: rgba(169,180,214,.75); font-weight:600}
+    .k{
+      font-size:12px; color:var(--muted);
+      border:1px solid var(--line);
+      padding:6px 8px; border-radius:10px;
+      background: rgba(15,26,51,.55);
+      white-space:nowrap;
+    }
+    .tabs{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin:18px 0 8px;
+    }
+    .tab{
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background: rgba(11,18,32,.55);
+      color:var(--muted);
+      cursor:pointer;
+      font-weight:800;
+      font-size:12px;
+      display:flex; gap:8px; align-items:center;
+      transition: background .2s ease, border-color .2s ease, color .2s ease;
+      user-select:none;
+    }
+    .tab.active{
+      color:var(--text);
+      border-color: rgba(74,163,255,.35);
+      background: linear-gradient(135deg, rgba(74,163,255,.18), rgba(124,92,255,.14));
+    }
+    main{
+      margin-top:10px;
+      display:grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap:14px;
+    }
+    @media (max-width: 980px){
+      main{grid-template-columns: 1fr}
+      .brand{min-width:auto}
+    }
+    .panel{
+      border:1px solid var(--line);
+      background: rgba(11,18,32,.65);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .panelHeader{
+      padding:14px 14px;
+      border-bottom:1px solid var(--line);
+      display:flex; justify-content:space-between; align-items:flex-start; gap:10px;
+      background: linear-gradient(180deg, rgba(15,26,51,.55), rgba(11,18,32,.25));
+    }
+    .panelHeader h2{
+      margin:0;
+      font-size:14px;
+      font-weight:900;
+      letter-spacing:.3px;
+    }
+    .panelHeader p{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:12px;
+      font-weight:600;
+    }
+    .panelBody{padding:14px}
+    .gridCards{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap:12px;
+    }
+    @media (max-width: 560px){
+      .gridCards{grid-template-columns:1fr}
+      .right .pill{display:none}
+    }
+    .card{
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(12,21,48,.9), rgba(11,18,32,.55));
+      border-radius: 16px;
+      padding:12px;
+      cursor:pointer;
+      transition: transform .08s ease, border-color .2s ease, background .2s ease;
+      position:relative;
+      overflow:hidden;
+    }
+    .card:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.15)}
+    .card:active{transform: translateY(0)}
+    .badge{
+      display:inline-flex; gap:8px; align-items:center;
+      font-size:11px; font-weight:900;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      color:var(--muted);
+      background: rgba(15,26,51,.35);
+    }
+    .badge b{color:var(--text)}
+    .title{
+      margin:10px 0 6px;
+      font-weight:950;
+      letter-spacing:.2px;
+      font-size:13px;
+    }
+    .desc{
+      margin:0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.35;
+      font-weight:600;
+    }
+    .chev{
+      position:absolute; right:10px; top:10px;
+      width:26px; height:26px; border-radius:10px;
+      border:1px solid var(--line);
+      display:grid; place-items:center;
+      color: rgba(232,238,252,.9);
+      background: rgba(15,26,51,.35);
+    }
+    .sideList{
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .mini{
+      border:1px solid var(--line);
+      background: rgba(11,18,32,.55);
+      border-radius: 16px;
+      padding:12px;
+    }
+    .mini h3{
+      margin:0 0 8px;
+      font-size:13px; font-weight:950;
+    }
+    .row{
+      display:flex; gap:10px; align-items:center; justify-content:space-between;
+      border-top:1px solid var(--line);
+      padding-top:10px; margin-top:10px;
+    }
+    .muted{color:var(--muted); font-size:12px; font-weight:650}
+    .chip{
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background: rgba(15,26,51,.4);
+      font-size:12px;
+      font-weight:850;
+      color:var(--text);
+      cursor:pointer;
+      user-select:none;
+    }
+    .chip:hover{border-color: rgba(255,255,255,.18)}
+    .modalBack{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.62);
+      display:none;
+      align-items:flex-end;
+      justify-content:center;
+      padding:14px;
+      z-index:100;
+    }
+    .modal{
+      width:min(980px, 100%);
+      border-radius: 22px;
+      border:1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(15,26,51,.95), rgba(11,18,32,.92));
+      box-shadow: 0 30px 70px rgba(0,0,0,.55);
+      overflow:hidden;
+      transform: translateY(10px);
+      animation: up .16s ease forwards;
+    }
+    @keyframes up{to{transform: translateY(0)}}
+    .modalTop{
+      padding:14px;
+      border-bottom:1px solid var(--line);
+      display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+    }
+    .modalTop h3{margin:0; font-size:15px; font-weight:950}
+    .modalTop .sub{margin:6px 0 0; color:var(--muted); font-size:12px; font-weight:650}
+    .modalBody{
+      padding:14px;
+      max-height: 72vh;
+      overflow:auto;
+    }
+    .section{
+      border:1px solid var(--line);
+      background: rgba(11,18,32,.45);
+      border-radius: 16px;
+      padding:12px;
+      margin-bottom:10px;
+    }
+    .section h4{margin:0 0 8px; font-size:13px; font-weight:950}
+    .section p, .section li{
+      color: rgba(232,238,252,.92);
+      font-size:12.5px; line-height:1.45; font-weight:600;
+      margin:0;
+    }
+    .section ul{margin:8px 0 0 18px}
+    .tagRow{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
+    .tag{
+      font-size:11px; font-weight:900;
+      border:1px solid var(--line);
+      padding:6px 10px; border-radius:999px;
+      background: rgba(15,26,51,.35);
+      color: var(--muted);
+    }
+    .danger{color: var(--bad)}
+    .warn{color: var(--warn)}
+    .ok{color: var(--ok)}
+    .footerBar{
+      position:fixed; left:0; right:0; bottom:0;
+      background: linear-gradient(180deg, rgba(7,11,20,0), rgba(7,11,20,.85));
+      border-top:1px solid rgba(255,255,255,.06);
+      padding:10px 14px;
+      z-index:60;
+    }
+    .footerInner{
+      max-width:1100px; margin:0 auto;
+      display:flex; gap:10px; align-items:center; justify-content:space-between;
+    }
+    .hint{
+      color: rgba(169,180,214,.9);
+      font-size:12px;
+      font-weight:650;
+    }
+    .tiny{
+      font-size:11px;
+      color: rgba(169,180,214,.85);
+      font-weight:650;
+    }
+    .split{display:flex; gap:10px; align-items:center}
+    .srOnly{
+      position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+      overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+    }
+    .calcGrid{
+      display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px;
+    }
+    @media (max-width:560px){ .calcGrid{grid-template-columns:1fr} }
+    .field{
+      border:1px solid var(--line);
+      background: rgba(11,18,32,.55);
+      border-radius: 14px;
+      padding:10px;
+    }
+    .field label{
+      display:block;
+      font-size:11px;
+      color: rgba(169,180,214,.95);
+      font-weight:900;
+      margin-bottom:6px;
+    }
+    .field input, .field select{
+      width:100%;
+      border:none; outline:none;
+      background: rgba(15,26,51,.35);
+      color: var(--text);
+      font-weight:800;
+      border-radius: 12px;
+      padding:10px 10px;
+      font-size:13px;
+    }
+    .result{
+      border:1px solid rgba(74,163,255,.22);
+      background: linear-gradient(135deg, rgba(74,163,255,.12), rgba(124,92,255,.10));
+      border-radius: 16px;
+      padding:12px;
+      display:flex; justify-content:space-between; align-items:center; gap:12px;
+    }
+    .result b{font-size:14px}
+    .result span{color:var(--muted); font-size:12px; font-weight:650}
+    .smallBtn{
+      padding:8px 10px;
+      border-radius: 12px;
+      border:1px solid var(--line);
+      background: rgba(11,18,32,.6);
+      cursor:pointer;
+      font-weight:900;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo" title="Abatbook">
+          <span>AB</span>
+        </div>
+        <div>
+          <h1>Abatbook</h1>
+          <small>Guia clínico rápido • offline no navegador</small>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="pill" id="storagePill" title="Status de salvamento local">
+          <span class="dot" id="storageDot"></span>
+          <span id="storageTxt">Salvando local</span>
+        </div>
+        <button class="btn" id="btnFavs" title="Ver favoritos">
+          ★ Favoritos
+        </button>
+        <button class="btn primary" id="btnAbout" title="Sobre">
+          i Sobre
+        </button>
+      </div>
+    </div>
+
+    <div class="searchRow">
+      <div class="search" role="search">
+        <span aria-hidden="true">🔎</span>
+        <input id="q" type="text" placeholder="Buscar: protocolo, medicamento, calculadora, interação, CID..." autocomplete="off" />
+        <span class="k">Enter</span>
+      </div>
+      <button class="btn" id="btnClear" title="Limpar busca">Limpar</button>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="tabs" id="tabs">
+      <div class="tab active" data-tab="all">✨ Tudo</div>
+      <div class="tab" data-tab="protocolos">🧭 Protocolos</div>
+      <div class="tab" data-tab="meds">💊 Medicamentos</div>
+      <div class="tab" data-tab="calcs">🧮 Calculadoras</div>
+      <div class="tab" data-tab="interacoes">⚡ Interações</div>
+      <div class="tab" data-tab="cids">🏷️ CID (demo)</div>
+    </div>
+
+    <main>
+      <section class="panel">
+        <div class="panelHeader">
+          <div>
+            <h2 id="listTitle">Conteúdos</h2>
+            <p id="listSubtitle">Toque em um card pra abrir. Segure o ★ pra favoritar.</p>
+          </div>
+          <button class="btn" id="btnExport" title="Exportar favoritos/ajustes">
+            ⤓ Backup
+          </button>
+        </div>
+        <div class="panelBody">
+          <div class="gridCards" id="cards"></div>
+          <div id="empty" class="muted" style="display:none; padding:10px 2px;">
+            Nada encontrado. Tenta buscar por “dor”, “amoxi”, “CURB”, “interação”...
+          </div>
+        </div>
+      </section>
+
+      <aside class="sideList">
+        <div class="mini">
+          <h3>Atalhos rápidos</h3>
+          <div class="tagRow" id="quickTags"></div>
+          <div class="row">
+            <div>
+              <div class="muted">Dica</div>
+              <div class="tiny">Abatbook salva tudo no seu navegador (localStorage).</div>
+            </div>
+            <button class="smallBtn" id="btnReset">Reset</button>
+          </div>
+        </div>
+
+        <div class="mini">
+          <h3>Calculadora rápida (IMC)</h3>
+          <div class="calcGrid">
+            <div class="field">
+              <label>Altura (m)</label>
+              <input id="imcAlt" type="number" step="0.01" placeholder="ex.: 1.72" />
+            </div>
+            <div class="field">
+              <label>Peso (kg)</label>
+              <input id="imcPeso" type="number" step="0.1" placeholder="ex.: 78" />
+            </div>
+          </div>
+          <div style="height:10px"></div>
+          <div class="result">
+            <div>
+              <b id="imcVal">—</b><br/>
+              <span id="imcClass">Informe altura e peso</span>
+            </div>
+            <button class="smallBtn" id="btnCalcImc">Calcular</button>
+          </div>
+        </div>
+
+        <div class="mini">
+          <h3>Interações (demo)</h3>
+          <p class="desc">Digite 2 fármacos e veja uma resposta “modelo” (você pode ampliar a base depois).</p>
+          <div style="height:10px"></div>
+          <div class="field">
+            <label>Fármaco A</label>
+            <input id="ia" placeholder="ex.: varfarina" />
+          </div>
+          <div style="height:10px"></div>
+          <div class="field">
+            <label>Fármaco B</label>
+            <input id="ib" placeholder="ex.: AINE" />
+          </div>
+          <div style="height:10px"></div>
+          <button class="btn primary" id="btnCheck">Checar</button>
+          <div style="height:10px"></div>
+          <div class="section" id="iResult" style="display:none">
+            <h4>Resultado</h4>
+            <p id="iText"></p>
+            <div class="tagRow" id="iTags"></div>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <div class="footerBar">
+    <div class="footerInner">
+      <div class="split">
+        <div class="hint">⚡ Abatbook é um protótipo educativo. Sempre valide condutas e doses.</div>
+      </div>
+      <div class="tiny" id="footCount">—</div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modalBack" id="modalBack" role="dialog" aria-modal="true" aria-label="Detalhes">
+    <div class="modal">
+      <div class="modalTop">
+        <div>
+          <h3 id="mTitle">—</h3>
+          <div class="sub" id="mSub">—</div>
+        </div>
+        <div class="split">
+          <button class="btn" id="btnFav">★ Favoritar</button>
+          <button class="btn" id="btnClose">Fechar</button>
+        </div>
+      </div>
+      <div class="modalBody" id="mBody"></div>
+    </div>
+  </div>
+
+<script>
+/* =========================
+   ABATBOOK — dados demo
+   ========================= */
+const DB = [
+  {
+    id:"prot_dor_toracica",
+    type:"protocolos",
+    badge:"Protocolo",
+    title:"Dor torácica — abordagem inicial",
+    subtitle:"Triagem, sinais de gravidade, conduta inicial",
+    summary:"Checklist prático: história, ECG, marcadores, risco e conduta.",
+    tags:["Urgência","Cardio","ECG","Manchester"],
+    content: [
+      {h:"Objetivo", p:"Identificar causas graves (SCA, TEP, dissecção, pneumotórax hipertensivo, tamponamento) e iniciar manejo precoce."},
+      {h:"Red flags (grave)", ul:[
+        "Dor em repouso intensa, síncope, hipotensão, sudorese fria",
+        "Dispneia importante, SatO₂ baixa, cianose",
+        "Dor com irradiação + náusea/diaphorese + fatores de risco",
+        "Assimetria de pulsos / dor transfixante (dissecção)"
+      ]},
+      {h:"Exames imediatos", ul:[
+        "ECG 12 derivações em até 10 min",
+        "Oximetria, PA, FC, FR, glicemia",
+        "Troponina seriada conforme protocolo local"
+      ]},
+      {h:"Conduta inicial (modelo)", ul:[
+        "Oxigênio se SatO₂ baixa",
+        "AAS se suspeita de SCA e sem contraindicação",
+        "Analgesia conforme necessidade e avaliação",
+        "Encaminhar/regular urgência conforme risco"
+      ]},
+      {h:"Observação", p:"Conteúdo educativo. Ajuste ao protocolo do seu serviço."}
+    ]
+  },
+  {
+    id:"prot_febre",
+    type:"protocolos",
+    badge:"Protocolo",
+    title:"Febre — adulto (avaliação rápida)",
+    subtitle:"Síndrome febril: triagem e condutas iniciais",
+    summary:"Estruture a história, foco, sinais de alarme e exames.",
+    tags:["Clínica","Infecção","Triagem"],
+    content: [
+      {h:"Sinais de alarme", ul:[
+        "Rebaixamento de consciência",
+        "Rigidez de nuca / petéquias",
+        "Instabilidade hemodinâmica",
+        "Dispneia importante, desidratação grave",
+        "Imunossuprimidos / gestantes / idosos frágeis"
+      ]},
+      {h:"Perguntas-chave", ul:[
+        "Início e pico da febre, calafrios",
+        "Foco: respiratório, urinário, pele, GI",
+        "Viagens, contatos, arboviroses, exposições",
+        "Uso de antibiótico/anti-inflamatório recente"
+      ]},
+      {h:"Exames (conforme caso)", ul:[
+        "Hemograma, PCR",
+        "Urina I/cultura se suspeita urinária",
+        "RX tórax se suspeita respiratória",
+        "Testes locais (dengue, influenza etc.)"
+      ]}
+    ]
+  },
+  {
+    id:"med_amoxicilina",
+    type:"meds",
+    badge:"Medicamento",
+    title:"Amoxicilina",
+    subtitle:"Antibiótico beta-lactâmico (penicilina)",
+    summary:"Indicações comuns e orientação de prescrição (modelo).",
+    tags:["ATB","Odonto","Pediatria"],
+    content: [
+      {h:"Indicações (exemplos)", ul:[
+        "Infecções de vias aéreas superiores (avaliar risco/gravidade)",
+        "Odontogênica (conforme diagnóstico e drenagem quando indicada)"
+      ]},
+      {h:"Atenções", ul:[
+        "Alergia a penicilina",
+        "Ajuste em insuficiência renal (conforme diretriz)",
+        "Revisar duração e necessidade clínica"
+      ]},
+      {h:"Nota", p:"Dose e esquema variam por idade/peso/infecção. Use protocolo local e referências atuais."}
+    ]
+  },
+  {
+    id:"med_ibuprofeno",
+    type:"meds",
+    badge:"Medicamento",
+    title:"Ibuprofeno",
+    subtitle:"AINE — analgesia/anti-inflamatório",
+    summary:"Cuidados com GI, rim, interação com anticoagulantes.",
+    tags:["AINE","Dor","Inflamação"],
+    content: [
+      {h:"Atenções", ul:[
+        "Risco GI: gastrite/úlcera, sangramento",
+        "Risco renal em desidratação/DRC",
+        "Evitar em alergia a AINE, asma AINE-sensível"
+      ]},
+      {h:"Interações comuns", ul:[
+        "Anticoagulantes (↑ risco de sangramento)",
+        "Anti-hipertensivos (pode reduzir efeito em alguns casos)"
+      ]}
+    ]
+  },
+  {
+    id:"calc_imc",
+    type:"calcs",
+    badge:"Calculadora",
+    title:"IMC",
+    subtitle:"Índice de massa corporal",
+    summary:"IMC = peso / (altura²). Classificação automática.",
+    tags:["Nutrição","Clínica"],
+    content: [
+      {h:"Fórmula", p:"IMC = Peso(kg) / Altura(m)²"},
+      {h:"Classificação (adulto)", ul:[
+        "Abaixo do peso: < 18,5",
+        "Eutrofia: 18,5 – 24,9",
+        "Sobrepeso: 25 – 29,9",
+        "Obesidade: ≥ 30"
+      ]}
+    ]
+  },
+  {
+    id:"calc_curb65",
+    type:"calcs",
+    badge:"Calculadora",
+    title:"CURB-65 (demo)",
+    subtitle:"Pneumonia — estratificação de risco (modelo)",
+    summary:"Pontuação baseada em confusão, ureia, FR, PA, idade.",
+    tags:["Pneumo","Risco"],
+    content: [
+      {h:"Componentes (modelo)", ul:[
+        "Confusão",
+        "Ureia elevada",
+        "FR ≥ 30",
+        "PA baixa",
+        "Idade ≥ 65"
+      ]},
+      {h:"Uso", p:"Use versão oficial e protocolo local. Aqui é só o esqueleto."}
+    ]
+  },
+  {
+    id:"int_varfarina_aine",
+    type:"interacoes",
+    badge:"Interação",
+    title:"Varfarina + AINE",
+    subtitle:"Risco aumentado de sangramento",
+    summary:"Evitar/monitorar: aumenta risco GI e potencializa sangramento.",
+    tags:["Interação","Sangramento","Atenção"],
+    content: [
+      {h:"Risco principal", p:"Aumento do risco de sangramento, especialmente gastrointestinal."},
+      {h:"Conduta (geral)", ul:[
+        "Evitar se possível",
+        "Se necessário: menor dose/tempo, proteção gástrica quando indicada",
+        "Monitorar sinais de sangramento e INR conforme serviço"
+      ]}
+    ]
+  },
+  {
+    id:"cid_demo",
+    type:"cids",
+    badge:"CID (demo)",
+    title:"CID-10 (amostra)",
+    subtitle:"Exemplos para estrutura (não é base completa)",
+    summary:"Você pode depois alimentar com seu banco de CIDs.",
+    tags:["CID","Estrutura"],
+    content: [
+      {h:"Exemplos", ul:[
+        "I10 — Hipertensão essencial",
+        "E11 — Diabetes mellitus tipo 2",
+        "J18 — Pneumonia, organismo não especificado"
+      ]}
+    ]
+  },
+];
+
+const state = {
+  tab: "all",
+  q: "",
+  favs: new Set(),
+  lastOpen: null,
+};
+
+const LS_KEY = "abatbook_v1";
+
+function save(){
+  const payload = {
+    favs: [...state.favs],
+  };
+  localStorage.setItem(LS_KEY, JSON.stringify(payload));
+  setStoragePill(true);
+}
+function load(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(!raw) return;
+    const data = JSON.parse(raw);
+    if(Array.isArray(data.favs)) state.favs = new Set(data.favs);
+  }catch(e){}
+}
+
+function setStoragePill(ok){
+  const dot = document.getElementById("storageDot");
+  const txt = document.getElementById("storageTxt");
+  if(ok){
+    dot.style.background = getComputedStyle(document.documentElement).getPropertyValue("--ok");
+    txt.textContent = "Salvo local";
+  }else{
+    dot.style.background = getComputedStyle(document.documentElement).getPropertyValue("--warn");
+    txt.textContent = "Sem storage";
+  }
+}
+
+function iconFor(type){
+  return ({
+    protocolos:"🧭",
+    meds:"💊",
+    calcs:"🧮",
+    interacoes:"⚡",
+    cids:"🏷️"
+  })[type] || "📌";
+}
+
+function filterDB(){
+  const q = state.q.trim().toLowerCase();
+  const t = state.tab;
+  return DB.filter(item=>{
+    if(t !== "all" && item.type !== t) return false;
+    if(!q) return true;
+    const blob = [
+      item.title, item.subtitle, item.summary,
+      item.badge, item.type,
+      ...(item.tags||[]),
+      ...(item.content||[]).map(x => (x.h||"")+" "+(x.p||"")+" "+(x.ul?x.ul.join(" "):""))
+    ].join(" ").toLowerCase();
+    return blob.includes(q);
+  });
+}
+
+function render(){
+  const list = filterDB();
+  const cards = document.getElementById("cards");
+  const empty = document.getElementById("empty");
+  const foot = document.getElementById("footCount");
+
+  cards.innerHTML = "";
+  empty.style.display = list.length ? "none":"block";
+  foot.textContent = `${list.length} item(ns) • ${state.favs.size} favorito(s)`;
+
+  for(const item of list){
+    const el = document.createElement("div");
+    el.className = "card";
+    el.tabIndex = 0;
+
+    const isFav = state.favs.has(item.id);
+    el.innerHTML = `
+      <div class="chev" title="${isFav ? "Favorito":"Abrir"}">${isFav ? "★" : "›"}</div>
+      <div class="badge">${iconFor(item.type)} <b>${item.badge}</b> <span>•</span> <span>${item.type}</span></div>
+      <div class="title">${item.title}</div>
+      <p class="desc">${item.summary}</p>
+      <div class="tagRow" style="margin-top:10px">
+        ${(item.tags||[]).slice(0,3).map(t=>`<span class="tag">${t}</span>`).join("")}
+        ${(item.tags||[]).length>3 ? `<span class="tag">+${(item.tags||[]).length-3}</span>` : ``}
+      </div>
+    `;
+
+    el.addEventListener("click", ()=>openItem(item.id));
+    el.addEventListener("keydown", (ev)=>{
+      if(ev.key === "Enter") openItem(item.id);
+    });
+
+    cards.appendChild(el);
+  }
+
+  const titleMap = {
+    all:"Conteúdos",
+    protocolos:"Protocolos",
+    meds:"Medicamentos",
+    calcs:"Calculadoras",
+    interacoes:"Interações",
+    cids:"CID (demo)"
+  };
+  document.getElementById("listTitle").textContent = titleMap[state.tab] || "Conteúdos";
+}
+
+function openItem(id){
+  const item = DB.find(x=>x.id===id);
+  if(!item) return;
+
+  state.lastOpen = id;
+
+  document.getElementById("mTitle").textContent = item.title;
+  document.getElementById("mSub").textContent = `${iconFor(item.type)} ${item.badge} • ${item.subtitle}`;
+  const body = document.getElementById("mBody");
+  body.innerHTML = "";
+
+  const wrap = document.createElement("div");
+  for(const block of (item.content||[])){
+    const s = document.createElement("div");
+    s.className = "section";
+    const h = document.createElement("h4");
+    h.textContent = block.h || "Seção";
+    s.appendChild(h);
+    if(block.p){
+      const p = document.createElement("p");
+      p.textContent = block.p;
+      s.appendChild(p);
+    }
+    if(block.ul){
+      const ul = document.createElement("ul");
+      for(const liText of block.ul){
+        const li = document.createElement("li");
+        li.textContent = liText;
+        ul.appendChild(li);
+      }
+      s.appendChild(ul);
+    }
+    wrap.appendChild(s);
+  }
+
+  // tags
+  const tags = document.createElement("div");
+  tags.className = "section";
+  tags.innerHTML = `
+    <h4>Tags</h4>
+    <div class="tagRow">${(item.tags||[]).map(t=>`<span class="tag">${t}</span>`).join("") || `<span class="tag">—</span>`}</div>
+  `;
+  wrap.appendChild(tags);
+
+  body.appendChild(wrap);
+
+  syncFavBtn();
+  showModal(true);
+}
+
+function showModal(on){
+  const back = document.getElementById("modalBack");
+  back.style.display = on ? "flex":"none";
+}
+
+function syncFavBtn(){
+  const btn = document.getElementById("btnFav");
+  const id = state.lastOpen;
+  const isFav = id && state.favs.has(id);
+  btn.textContent = isFav ? "★ Remover" : "★ Favoritar";
+}
+
+function toggleFav(id){
+  if(!id) return;
+  if(state.favs.has(id)) state.favs.delete(id);
+  else state.favs.add(id);
+  save();
+  syncFavBtn();
+  render();
+}
+
+function setTab(tab){
+  state.tab = tab;
+  document.querySelectorAll(".tab").forEach(t=>{
+    t.classList.toggle("active", t.dataset.tab === tab);
+  });
+  render();
+}
+
+function exportBackup(){
+  const payload = {
+    version:"abatbook_v1",
+    exportedAt: new Date().toISOString(),
+    favs: [...state.favs],
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "abatbook-backup.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function resetAll(){
+  localStorage.removeItem(LS_KEY);
+  state.favs = new Set();
+  setStoragePill(true);
+  render();
+}
+
+function renderQuickTags(){
+  const quick = [
+    {label:"dor torácica", q:"dor torácica"},
+    {label:"febre", q:"febre"},
+    {label:"amoxi", q:"amoxicilina"},
+    {label:"AINE", q:"ibuprofeno"},
+    {label:"CURB", q:"CURB"},
+    {label:"interação", q:"varfarina"},
+  ];
+  const box = document.getElementById("quickTags");
+  box.innerHTML = "";
+  quick.forEach(t=>{
+    const c = document.createElement("div");
+    c.className = "chip";
+    c.textContent = t.label;
+    c.addEventListener("click", ()=>{
+      document.getElementById("q").value = t.q;
+      state.q = t.q;
+      render();
+      window.scrollTo({top:0, behavior:"smooth"});
+    });
+    box.appendChild(c);
+  });
+}
+
+function calcIMC(){
+  const alt = parseFloat(document.getElementById("imcAlt").value);
+  const peso = parseFloat(document.getElementById("imcPeso").value);
+  const v = document.getElementById("imcVal");
+  const c = document.getElementById("imcClass");
+  if(!alt || !peso || alt<=0 || peso<=0){
+    v.textContent = "—";
+    c.textContent = "Informe altura e peso";
+    return;
+  }
+  const imc = peso / (alt*alt);
+  const imcR = Math.round(imc*10)/10;
+  v.textContent = imcR.toFixed(1);
+
+  let cls = "";
+  if(imc < 18.5) cls = "Abaixo do peso";
+  else if(imc < 25) cls = "Eutrofia";
+  else if(imc < 30) cls = "Sobrepeso";
+  else cls = "Obesidade";
+  c.textContent = cls;
+}
+
+function checkInteraction(a,b){
+  const aa = (a||"").trim().toLowerCase();
+  const bb = (b||"").trim().toLowerCase();
+  const box = document.getElementById("iResult");
+  const text = document.getElementById("iText");
+  const tags = document.getElementById("iTags");
+  if(!aa || !bb){
+    box.style.display="none";
+    return;
+  }
+
+  // regras demo simples
+  let level="moderada";
+  let msg="Possível interação. Avalie risco/benefício e monitore.";
+  let tgs=["Monitorar"];
+
+  const pair = `${aa} + ${bb}`;
+  if((aa.includes("varfar") && (bb.includes("aine") || bb.includes("ibuprof") || bb.includes("diclo"))) ||
+     (bb.includes("varfar") && (aa.includes("aine") || aa.includes("ibuprof") || aa.includes("diclo")))){
+    level="alta";
+    msg="Risco aumentado de sangramento (especialmente GI). Evitar se possível; se necessário, usar menor tempo/dose e monitorar.";
+    tgs=["Sangramento","Evitar/Monitorar"];
+  }
+
+  let colorClass = level==="alta" ? "danger" : (level==="moderada" ? "warn" : "ok");
+
+  box.style.display="block";
+  text.innerHTML = `<span class="${colorClass}" style="font-weight:950">Interação ${level.toUpperCase()}</span>: ${msg} <br><span class="muted">Consulta: "${pair}" (demo)</span>`;
+  tags.innerHTML = tgs.map(x=>`<span class="tag">${x}</span>`).join("");
+}
+
+/* =========================
+   Eventos
+   ========================= */
+load();
+setStoragePill(true);
+
+document.getElementById("tabs").addEventListener("click", (e)=>{
+  const tab = e.target.closest(".tab");
+  if(!tab) return;
+  setTab(tab.dataset.tab);
+});
+
+document.getElementById("q").addEventListener("keydown", (e)=>{
+  if(e.key === "Enter"){
+    state.q = e.target.value;
+    render();
+  }
+});
+document.getElementById("q").addEventListener("input", (e)=>{
+  state.q = e.target.value;
+  render();
+});
+
+document.getElementById("btnClear").addEventListener("click", ()=>{
+  document.getElementById("q").value = "";
+  state.q = "";
+  render();
+});
+
+document.getElementById("btnClose").addEventListener("click", ()=>showModal(false));
+document.getElementById("modalBack").addEventListener("click", (e)=>{
+  if(e.target.id === "modalBack") showModal(false);
+});
+
+document.getElementById("btnFav").addEventListener("click", ()=>{
+  toggleFav(state.lastOpen);
+});
+
+document.getElementById("btnFavs").addEventListener("click", ()=>{
+  // mostra só favoritos via busca especial
+  const ids = [...state.favs];
+  if(!ids.length){
+    alert("Sem favoritos ainda. Abra um item e clique em ★.");
+    return;
+  }
+  // hack: set tab all e busca por id via render manual
+  state.tab = "all";
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active", t.dataset.tab==="all"));
+  const cards = document.getElementById("cards");
+  cards.innerHTML = "";
+  document.getElementById("empty").style.display = "none";
+  document.getElementById("listTitle").textContent = "Favoritos";
+  document.getElementById("footCount").textContent = `${ids.length} favorito(s)`;
+
+  ids.map(id => DB.find(x=>x.id===id)).filter(Boolean).forEach(item=>{
+    const el = document.createElement("div");
+    el.className = "card";
+    el.innerHTML = `
+      <div class="chev" title="Favorito">★</div>
+      <div class="badge">${iconFor(item.type)} <b>${item.badge}</b> <span>•</span> <span>${item.type}</span></div>
+      <div class="title">${item.title}</div>
+      <p class="desc">${item.summary}</p>
+      <div class="tagRow" style="margin-top:10px">
+        ${(item.tags||[]).slice(0,3).map(t=>`<span class="tag">${t}</span>`).join("")}
+      </div>
+    `;
+    el.addEventListener("click", ()=>openItem(item.id));
+    cards.appendChild(el);
+  });
+
+  window.scrollTo({top:0, behavior:"smooth"});
+});
+
+document.getElementById("btnAbout").addEventListener("click", ()=>{
+  state.lastOpen = "about";
+  document.getElementById("mTitle").textContent = "Sobre o Abatbook";
+  document.getElementById("mSub").textContent = "✨ Protótipo em HTML • Base demo";
+  const body = document.getElementById("mBody");
+  body.innerHTML = `
+    <div class="section">
+      <h4>O que é</h4>
+      <p>Um protótipo tipo “guia clínico” (estilo app), feito em 1 arquivo só. Ele salva favoritos e ajustes no seu navegador.</p>
+    </div>
+    <div class="section">
+      <h4>Como evoluir (se você quiser)</h4>
+      <ul>
+        <li>Adicionar base grande (medicamentos, CIDs, protocolos) em JSON</li>
+        <li>Adicionar PDF export do conteúdo aberto</li>
+        <li>Transformar em PWA offline com service worker</li>
+        <li>Modo “Prescrição” com modelos e assinatura do profissional</li>
+      </ul>
+    </div>
+    <div class="section">
+      <h4>Nota</h4>
+      <p class="warn"><b>Conteúdo educativo.</b> Sempre valide condutas, doses e diretrizes oficiais.</p>
+    </div>
+  `;
+  document.getElementById("btnFav").style.display = "none";
+  showModal(true);
+});
+
+document.getElementById("btnExport").addEventListener("click", exportBackup);
+document.getElementById("btnReset").addEventListener("click", ()=>{
+  const ok = confirm("Resetar favoritos e dados locais do Abatbook?");
+  if(ok) resetAll();
+});
+
+document.getElementById("btnCalcImc").addEventListener("click", calcIMC);
+
+document.getElementById("btnCheck").addEventListener("click", ()=>{
+  checkInteraction(
+    document.getElementById("ia").value,
+    document.getElementById("ib").value
+  );
+});
+
+renderQuickTags();
+render();
+
+// ao abrir o modal "about", escondemos fav, então garantimos mostrar nos outros
+const modalBack = document.getElementById("modalBack");
+const obs = new MutationObserver(()=>{
+  const btnFav = document.getElementById("btnFav");
+  if(modalBack.style.display === "flex" && state.lastOpen !== "about"){
+    btnFav.style.display = "flex";
+  }
+});
+obs.observe(modalBack, {attributes:true, attributeFilter:["style"]});
+</script>
+</body>
+</html>
